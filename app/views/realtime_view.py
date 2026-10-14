@@ -13,9 +13,9 @@ from charts import MUTED, SERIES, STATUS, style
 from drillopt.realtime import AlertConfig, RealtimeMonitor, ReplayStream
 
 ALERT_STYLE = {
-    "ROP_BELOW_MODEL": ("⚠️", STATUS["warning"], "ROP below model"),
-    "MSE_SPIKE": ("⚠️", STATUS["serious"], "MSE spike"),
-    "SPP_DEVIATION": ("⛔", STATUS["critical"], "SPP deviation"),
+    "ROP_BELOW_MODEL": (STATUS["warning"], "ROP below model"),
+    "MSE_SPIKE": (STATUS["serious"], "MSE spike"),
+    "SPP_DEVIATION": (STATUS["critical"], "SPP deviation"),
 }
 
 
@@ -52,12 +52,12 @@ def render():
         _reset(df, start, cfg)
 
     b = st.columns([1, 1, 1, 4])
-    if b[0].button("▶ Start" if not st.session_state.rt_running else "⏸ Pause", type="primary"):
+    if b[0].button("Start" if not st.session_state.rt_running else "Pause", type="primary"):
         st.session_state.rt_running = not st.session_state.rt_running
         st.rerun()
-    if b[1].button("⏭ Step"):
+    if b[1].button("Step"):
         _advance(speed)
-    if b[2].button("↺ Reset"):
+    if b[2].button("Reset"):
         _reset(df, start, cfg)
         st.rerun()
     st.session_state.rt_monitor.config = cfg
@@ -115,7 +115,7 @@ def _live_body(speed: int, window: int):
 
     alerts = mon.alerts_frame()
     alerts = alerts[alerts["depth"] >= last["depth"] - window]
-    for kind, (icon, color, label) in ALERT_STYLE.items():
+    for kind, (color, label) in ALERT_STYLE.items():
         a = alerts[alerts["kind"] == kind]
         if a.empty:
             continue
@@ -138,7 +138,7 @@ def _live_body(speed: int, window: int):
         if log.empty:
             st.caption("No alerts yet.")
         else:
-            log["type"] = log["kind"].map(lambda k: f"{ALERT_STYLE[k][0]} {ALERT_STYLE[k][2]}")
+            log["type"] = log["kind"].map(lambda k: ALERT_STYLE[k][1])
             st.dataframe(log[["depth", "type", "message"]], hide_index=True,
                          use_container_width=True, height=260)
     with right:
@@ -147,8 +147,8 @@ def _live_body(speed: int, window: int):
         footage = max(hist["depth"].iloc[-1] - hist["depth"].iloc[0], 1)
         fig = go.Figure(go.Bar(
             x=[100 * counts.get(k, 0) / footage for k in ALERT_STYLE],
-            y=[f"{v[0]} {v[2]}" for v in ALERT_STYLE.values()], orientation="h",
-            marker_color=[v[1] for v in ALERT_STYLE.values()],
+            y=[v[1] for v in ALERT_STYLE.values()], orientation="h",
+            marker_color=[v[0] for v in ALERT_STYLE.values()],
             hovertemplate="%{y}: %{x:.2f} per 100 ft<extra></extra>"))
         st.plotly_chart(style(fig, 260, legend=False), use_container_width=True)
         if mon.model is not None:

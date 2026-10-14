@@ -17,7 +17,7 @@ import streamlit as st  # noqa: E402
 from drillopt.data import load_processed  # noqa: E402
 from drillopt.rop import add_drilling_features  # noqa: E402
 
-st.set_page_config(page_title="Drilling Optimization", page_icon="🛢️", layout="wide")
+st.set_page_config(page_title="Drilling Optimization", layout="wide")
 
 
 @st.cache_data(show_spinner="Loading drilling data...")
@@ -63,9 +63,9 @@ st.session_state["df"] = sidebar_filters(df_all)
 from views import hydraulics_view, overview, realtime_view, rop_view  # noqa: E402
 
 pages = [
-    st.Page(overview.render, title="Overview", icon="📊", url_path="overview", default=True),
-    st.Page(rop_view.render, title="ROP Model & Optimizer", icon="⛏️", url_path="rop"),
-    st.Page(hydraulics_view.render, title="Hydraulics", icon="💧", url_path="hydraulics"),
-    st.Page(realtime_view.render, title="Real-time Monitor", icon="📡", url_path="realtime"),
+    st.Page(overview.render, title="Overview", url_path="overview", default=True),
+    st.Page(rop_view.render, title="ROP Model & Optimizer", url_path="rop"),
+    st.Page(hydraulics_view.render, title="Hydraulics", url_path="hydraulics"),
+    st.Page(realtime_view.render, title="Real-time Monitor", url_path="realtime"),
 ]
 st.navigation(pages).run()
