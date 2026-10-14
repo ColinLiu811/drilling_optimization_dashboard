@@ -1,5 +1,6 @@
 [theme]
 primaryColor = "#2a78d6"
+font = "Times New Roman, serif"
 
 [server]
 headless = true

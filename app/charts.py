@@ -19,7 +19,7 @@ def style(fig: go.Figure, height: int = 380, legend: bool | None = None) -> go.F
         height=height,
         margin=dict(l=10, r=10, t=60, b=10),
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
-        font=dict(family="system-ui, -apple-system, Segoe UI, sans-serif"),
+        font=dict(family="Times New Roman, Times, serif"),
     )
     if legend is not None:
         fig.update_layout(showlegend=legend)
