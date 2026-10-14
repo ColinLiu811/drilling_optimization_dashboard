@@ -81,6 +81,7 @@ class RealtimeMonitor:
     window: int = 150          # samples kept in the rolling buffer
     refit_every: int = 25      # refit the local ROP model every N samples
     min_fit_samples: int = 40
+    ridge_alpha: float = 1.0   # exponent shrinkage for the short local window
     config: AlertConfig = field(default_factory=AlertConfig)
 
     def __post_init__(self):
@@ -97,7 +98,7 @@ class RealtimeMonitor:
         buf = pd.DataFrame(self.buffer).dropna(subset=["wob", "rpm", "flow", "rop"])
         if len(buf) < self.min_fit_samples:
             return
-        self.model = PowerLawROP().fit(buf[["wob", "rpm", "flow"]], buf["rop"])
+        self.model = PowerLawROP(alpha=self.ridge_alpha).fit(buf[["wob", "rpm", "flow"]], buf["rop"])
         self._rop_cap = float(buf["rop"].max())
         self._since_fit = 0
 

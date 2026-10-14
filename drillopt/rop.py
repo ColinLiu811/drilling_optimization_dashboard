@@ -70,12 +70,21 @@ def add_drilling_features(df: pd.DataFrame, window: int = 30) -> pd.DataFrame:
 
 
 class PowerLawROP(BaseEstimator, RegressorMixin):
-    """ROP = K * prod(x_i ^ a_i), fitted by OLS on log-transformed data."""
+    """ROP = K * prod(x_i ^ a_i), fitted by least squares on log-transformed data.
+
+    ``alpha`` > 0 shrinks the exponents toward zero (ridge). Short rolling
+    windows, where WOB/RPM/flow barely vary and are collinear, need this to
+    keep the exponents physically sensible.
+    """
+
+    def __init__(self, alpha: float = 0.0):
+        self.alpha = alpha
 
     def fit(self, X, y):
         X = np.asarray(X, dtype=float)
         y = np.asarray(y, dtype=float)
-        self.lr_ = LinearRegression().fit(np.log(np.clip(X, 1e-6, None)), np.log(y))
+        reg = Ridge(alpha=self.alpha) if self.alpha > 0 else LinearRegression()
+        self.lr_ = reg.fit(np.log(np.clip(X, 1e-6, None)), np.log(y))
         self.exponents_ = self.lr_.coef_
         self.K_ = float(np.exp(self.lr_.intercept_))
         # Smearing estimate (Duan 1983) corrects the bias of back-transforming
