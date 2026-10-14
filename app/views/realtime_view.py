@@ -129,7 +129,7 @@ def _live_body(speed: int, window: int):
                       row=row, col=1)
     fig.update_xaxes(title_text="Measured depth (ft)", row=3, col=1)
     fig.update_layout(hovermode="x unified")
-    st.plotly_chart(style(fig, 620), use_container_width=True)
+    st.plotly_chart(style(fig, 620), width="stretch")
 
     left, right = st.columns([2, 1])
     with left:
@@ -140,7 +140,7 @@ def _live_body(speed: int, window: int):
         else:
             log["type"] = log["kind"].map(lambda k: ALERT_STYLE[k][1])
             st.dataframe(log[["depth", "type", "message"]], hide_index=True,
-                         use_container_width=True, height=260)
+                         width="stretch", height=260)
     with right:
         st.markdown("**Alerts per 100 ft drilled**")
         counts = mon.alerts_frame()["kind"].value_counts()
@@ -150,7 +150,7 @@ def _live_body(speed: int, window: int):
             y=[v[1] for v in ALERT_STYLE.values()], orientation="h",
             marker_color=[v[0] for v in ALERT_STYLE.values()],
             hovertemplate="%{y}: %{x:.2f} per 100 ft<extra></extra>"))
-        st.plotly_chart(style(fig, 260, legend=False), use_container_width=True)
+        st.plotly_chart(style(fig, 260, legend=False), width="stretch")
         if mon.model is not None:
             e = mon.model.exponents_
             st.caption(f"Local model (last {len(mon.buffer)} ft): ROP ∝ WOB^{e[0]:.2f} · "

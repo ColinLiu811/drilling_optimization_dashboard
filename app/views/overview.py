@@ -27,7 +27,7 @@ def render():
     st.subheader("Depth tracks")
     tracks = [("rop", "ROP (ft/hr)"), ("wob", "WOB (klbf)"), ("rpm", "Surface RPM"),
               ("flow", "Flow (gpm)"), ("spp", "SPP (psi)"), ("mse", "MSE (kpsi)")]
-    st.plotly_chart(depth_tracks(df, tracks, color_by="section"), use_container_width=True)
+    st.plotly_chart(depth_tracks(df, tracks, color_by="section"), width="stretch")
 
     left, right = st.columns(2)
     with left:
@@ -46,7 +46,7 @@ def render():
         fig.update_layout(xaxis_title=x, yaxis_title="ROP (ft/hr)")
         if x == "mse":
             fig.update_xaxes(type="log")
-        st.plotly_chart(style(fig), use_container_width=True)
+        st.plotly_chart(style(fig), width="stretch")
 
     with right:
         st.subheader("Depth vs days")
@@ -59,8 +59,8 @@ def render():
                 hovertemplate="Day %{x:.1f}<br>%{y:,.0f} ft<extra>" + sec + "</extra>"))
         fig.update_layout(xaxis_title="Days since first on-bottom sample", yaxis_title="Measured depth (ft)")
         fig.update_yaxes(autorange="reversed")
-        st.plotly_chart(style(fig), use_container_width=True)
+        st.plotly_chart(style(fig), width="stretch")
 
     with st.expander("Section statistics"):
         cols = ["rop", "wob", "rpm", "flow", "spp", "torque", "mse"]
-        st.dataframe(df.groupby("section")[cols].median().round(1), use_container_width=True)
+        st.dataframe(df.groupby("section")[cols].median().round(1), width="stretch")

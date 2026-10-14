@@ -114,7 +114,7 @@ def _system(p):
         fig.update_layout(title="Pressure loss breakdown", xaxis_title="psi",
                           xaxis_range=[0, max(bd.values()) * 1.2])
         fig.update_yaxes(autorange="reversed")
-        st.plotly_chart(style(fig, 360, legend=False), use_container_width=True)
+        st.plotly_chart(style(fig, 360, legend=False), width="stretch")
     with right:
         prof = pd.DataFrame(r.profile)
         fig = go.Figure()
@@ -126,7 +126,7 @@ def _system(p):
         fig.update_layout(title="ECD at the bottom of each annular interval",
                           xaxis_title="ECD (ppg)", yaxis_title="MD (ft)")
         fig.update_yaxes(autorange="reversed")
-        st.plotly_chart(style(fig, 360, legend=False), use_container_width=True)
+        st.plotly_chart(style(fig, 360, legend=False), width="stretch")
 
     # SPP vs flow rate, with each component.
     qs = np.linspace(max(100.0, p["q"] * 0.4), p["q"] * 1.4, 30)
@@ -143,12 +143,12 @@ def _system(p):
     fig.add_vline(x=p["q"], line=dict(color=MUTED, dash="dot"), annotation_text="current")
     fig.update_layout(title="Pressure vs flow rate", xaxis_title="Flow (gpm)", yaxis_title="psi",
                       hovermode="x unified")
-    st.plotly_chart(style(fig, 360), use_container_width=True)
+    st.plotly_chart(style(fig, 360), width="stretch")
 
     rows = [{"Section": a.name, "Length (ft)": a.length, "Velocity (ft/s)": a.velocity,
              "Reynolds": a.reynolds, "Regime": a.regime, "Loss (psi)": a.loss}
             for a in r.pipe + r.annulus]
-    st.dataframe(pd.DataFrame(rows).round(2), hide_index=True, use_container_width=True)
+    st.dataframe(pd.DataFrame(rows).round(2), hide_index=True, width="stretch")
     min_ann_v = min(a.velocity for a in r.annulus) * 60
     if min_ann_v < 100:
         st.warning(f"Lowest annular velocity is {min_ann_v:.0f} ft/min - below ~100 ft/min hole "
@@ -198,7 +198,7 @@ def _nozzles(p):
                                          line=dict(color="white", width=2))))
     fig.update_layout(title="Flow-rate design window", xaxis_title="Flow (gpm)", yaxis_title="psi",
                       hovermode="x unified")
-    st.plotly_chart(style(fig, 380), use_container_width=True)
+    st.plotly_chart(style(fig, 380), width="stretch")
 
 
 @st.cache_data(show_spinner=False)
@@ -249,4 +249,4 @@ def _calibrate(p):
                              name="Model + constant BHA loss", line=dict(color=SERIES[1], width=2)))
     fig.update_layout(title="Standpipe pressure along the 8¾ in section", xaxis_title="MD (ft)",
                       yaxis_title="psi", hovermode="x unified")
-    st.plotly_chart(style(fig, 400), use_container_width=True)
+    st.plotly_chart(style(fig, 400), width="stretch")

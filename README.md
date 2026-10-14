@@ -20,6 +20,15 @@ pip install -e ".[dev]"
 streamlit run app/streamlit_app.py
 ```
 
+### Deploying on Streamlit Community Cloud
+
+The repo deploys as is: `requirements.txt` pins the tested versions, the
+processed dataset is committed, and the app imports `drillopt` from the repo
+root, so no package install is needed. At
+[share.streamlit.io](https://share.streamlit.io), choose **Create app**, pick
+this repository and branch `main`, set the main file path to
+`app/streamlit_app.py`, then deploy. The default Python version works.
+
 ## Data
 
 | | |

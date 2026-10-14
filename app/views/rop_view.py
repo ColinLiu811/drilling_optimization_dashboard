@@ -76,7 +76,7 @@ def render():
                                  line=dict(color=MUTED, dash="dash", width=1), hoverinfo="skip"))
         fig.update_layout(title="Predicted vs actual (hold-out)", xaxis_title="Actual ROP (ft/hr)",
                           yaxis_title="Predicted ROP (ft/hr)")
-        st.plotly_chart(style(fig, legend=False), use_container_width=True)
+        st.plotly_chart(style(fig, legend=False), width="stretch")
     with right:
         fig = go.Figure()
         fig.add_trace(go.Scatter(x=test["depth"], y=test["rop"], mode="lines", name="Measured",
@@ -85,7 +85,7 @@ def render():
                                  line=dict(color=SERIES[1], width=2)))
         fig.update_layout(title="Hold-out interval", xaxis_title="Measured depth (ft)",
                           yaxis_title="ROP (ft/hr)", hovermode="x unified")
-        st.plotly_chart(style(fig), use_container_width=True)
+        st.plotly_chart(style(fig), width="stretch")
 
     left, right = st.columns(2)
     with left:
@@ -99,17 +99,17 @@ def render():
             if kind == "power_law":
                 st.caption(f"K = {model.estimator.K_:.3g}. An exponent near 1 means ROP still scales "
                            "with that parameter; near 0 means it no longer helps (founder).")
-            st.plotly_chart(style(fig, 320, legend=False), use_container_width=True)
+            st.plotly_chart(style(fig, 320, legend=False), width="stretch")
     with right:
         cv = model.cv.copy()
         cv["interval"] = cv.apply(lambda r: f"{r.depth_from:,.0f}-{r.depth_to:,.0f} ft", axis=1)
         st.markdown("**Depth-blocked cross-validation** (each block predicted by a model trained "
                     "on the others)")
         st.dataframe(cv[["interval", "n", "r2", "rmse", "mae"]].round(2), hide_index=True,
-                     use_container_width=True)
+                     width="stretch")
         if st.button("Compare all models"):
             st.dataframe(_compare(key, data, features).round(2), hide_index=True,
-                         use_container_width=True)
+                         width="stretch")
 
     st.subheader("Parameter response")
     fig = make_subplots(rows=1, cols=3, shared_yaxes=True,
@@ -121,7 +121,7 @@ def render():
                                  hovertemplate=f"{f}: %{{x:.1f}}<br>ROP: %{{y:.0f}}<extra></extra>"),
                       row=1, col=i)
     fig.update_yaxes(title_text="Mean predicted ROP (ft/hr)", row=1, col=1)
-    st.plotly_chart(style(fig, 300), use_container_width=True)
+    st.plotly_chart(style(fig, 300), width="stretch")
     st.caption("Partial dependence from field data mixes cause and effect: drillers add weight "
                "in harder rock, so a falling WOB curve usually reflects formation, not a "
                "physical penalty for weight. Adding trailing ROP/MSE context reduces this bias.")
@@ -167,4 +167,4 @@ def _optimizer(model, data, features):
                                          line=dict(color="white", width=2))))
     fig.update_layout(title=f"Predicted ROP surface at {res['flow']:.0f} gpm",
                       xaxis_title="WOB (klbf)", yaxis_title="Surface RPM")
-    st.plotly_chart(style(fig, 450, legend=False), use_container_width=True)
+    st.plotly_chart(style(fig, 450, legend=False), width="stretch")
