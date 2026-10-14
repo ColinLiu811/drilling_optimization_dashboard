@@ -60,11 +60,12 @@ df_all = get_data()
 st.session_state["df_all"] = df_all
 st.session_state["df"] = sidebar_filters(df_all)
 
-from views import hydraulics_view, overview, rop_view  # noqa: E402
+from views import hydraulics_view, overview, realtime_view, rop_view  # noqa: E402
 
 pages = [
     st.Page(overview.render, title="Overview", icon="📊", url_path="overview", default=True),
     st.Page(rop_view.render, title="ROP Model & Optimizer", icon="⛏️", url_path="rop"),
     st.Page(hydraulics_view.render, title="Hydraulics", icon="💧", url_path="hydraulics"),
+    st.Page(realtime_view.render, title="Real-time Monitor", icon="📡", url_path="realtime"),
 ]
 st.navigation(pages).run()
