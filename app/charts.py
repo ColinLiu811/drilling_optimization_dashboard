@@ -14,15 +14,15 @@ MUTED = "#898781"
 SECTION_COLORS = {"12.25 in": SERIES[2], "12.00 in": SERIES[0], "8.75 in": SERIES[1]}
 
 
-def style(fig: go.Figure, height: int = 380, legend: bool = True) -> go.Figure:
+def style(fig: go.Figure, height: int = 380, legend: bool | None = None) -> go.Figure:
     fig.update_layout(
         height=height,
-        margin=dict(l=10, r=10, t=40, b=10),
-        hovermode="closest",
-        showlegend=legend,
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, x=0),
+        margin=dict(l=10, r=10, t=60, b=10),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
         font=dict(family="system-ui, -apple-system, Segoe UI, sans-serif"),
     )
+    if legend is not None:
+        fig.update_layout(showlegend=legend)
     fig.update_xaxes(showline=True, ticks="outside", zeroline=False)
     fig.update_yaxes(showline=True, ticks="outside", zeroline=False)
     return fig

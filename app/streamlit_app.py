@@ -60,9 +60,10 @@ df_all = get_data()
 st.session_state["df_all"] = df_all
 st.session_state["df"] = sidebar_filters(df_all)
 
-from views import overview  # noqa: E402
+from views import overview, rop_view  # noqa: E402
 
 pages = [
     st.Page(overview.render, title="Overview", icon="📊", url_path="overview", default=True),
+    st.Page(rop_view.render, title="ROP Model & Optimizer", icon="⛏️", url_path="rop"),
 ]
 st.navigation(pages).run()
