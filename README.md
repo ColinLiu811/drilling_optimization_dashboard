@@ -1,5 +1,6 @@
 # Drilling Optimization Dashboard
 
+See the working dashboard at https://cliudod.streamlit.app/ (email at john.6johnson66@gmail.com if any issues)
 An interactive Streamlit dashboard for drilling engineers built on real rig sensor
 data from the **Utah FORGE 16A(78)-32** geothermal well. It does three things:
 
